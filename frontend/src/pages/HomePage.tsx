@@ -14,6 +14,7 @@ import {
 import { api } from "../api/client";
 import { CategoryIcon } from "../components/CategoryIcon";
 import { ComingSoonBanner } from "../components/ComingSoonBanner";
+import { ShowcaseCarousel } from "../components/ShowcaseCarousel";
 
 export const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,6 +76,11 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Dynamic 10-Second Floating Showcase Carousel */}
+      <section className="relative -mt-6">
+        <ShowcaseCarousel />
       </section>
 
       {/* BTQ & QUBEX Informational Notice Banner */}
