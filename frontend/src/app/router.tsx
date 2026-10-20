@@ -22,6 +22,8 @@ import { ProjectDetailPage } from "../pages/ProjectDetailPage";
 import { ContractsListPage } from "../pages/ContractsListPage";
 import { ContractDetailPage } from "../pages/ContractDetailPage";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+import { ScrollToTopButton } from "../components/ScrollToTopButton";
+import { WelcomeConfettiModal } from "../components/WelcomeConfettiModal";
 
 export const AppRouter: React.FC = () => {
   return (
@@ -112,6 +114,8 @@ export const AppRouter: React.FC = () => {
           </Routes>
         </main>
         <Footer />
+        <ScrollToTopButton />
+        <WelcomeConfettiModal />
       </div>
     </BrowserRouter>
   );
