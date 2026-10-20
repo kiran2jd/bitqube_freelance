@@ -255,7 +255,7 @@ export const ProjectDetailPage: React.FC = () => {
                       <div className="flex items-center gap-4 text-xs text-slate-400 pt-1">
                         <span className="flex items-center gap-1 text-amber-400 font-semibold">
                           <Star className="w-3.5 h-3.5 fill-amber-400" />
-                          {prop.professional_rating ? prop.professional_rating.toFixed(1) : "5.0"}
+                          {prop.professional_rating ? Number(prop.professional_rating).toFixed(1) : "5.0"}
                         </span>
                         <span>·</span>
                         <span className="flex items-center gap-1">

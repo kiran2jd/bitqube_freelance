@@ -107,7 +107,7 @@ export const ProfessionalDetailPage: React.FC = () => {
                 <span>·</span>
                 <span className="flex items-center gap-1 text-amber-400 font-semibold">
                   <Star className="w-3.5 h-3.5 fill-amber-400" />
-                  {profile.rating_average ? profile.rating_average.toFixed(1) : "5.0"}
+                  {profile.rating_average ? Number(profile.rating_average).toFixed(1) : "5.0"}
                   <span className="text-slate-500 font-normal">({profile.total_reviews_count || 0} reviews)</span>
                 </span>
                 {profile.hourly_rate && (
@@ -246,7 +246,7 @@ export const ProfessionalDetailPage: React.FC = () => {
                     <div>
                       <span className="text-[10px] text-slate-500 uppercase block">Price</span>
                       <span className="text-base font-bold text-white">
-                        ₹ {srv.base_price.toLocaleString("en-IN")}
+                        ₹ {Number(srv.base_price).toLocaleString("en-IN")}
                       </span>
                     </div>
                     <Link

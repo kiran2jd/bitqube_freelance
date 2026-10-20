@@ -170,7 +170,7 @@ export const FindProfessionalsPage: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-1 text-xs text-amber-400 font-semibold mb-0.5">
                       <Star className="w-3.5 h-3.5 fill-amber-400" />
-                      <span>{prof.rating_average ? prof.rating_average.toFixed(1) : "5.0"}</span>
+                      <span>{prof.rating_average ? Number(prof.rating_average).toFixed(1) : "5.0"}</span>
                       <span className="text-slate-500 font-normal">({prof.total_reviews_count || 0})</span>
                     </div>
                     <div className="text-xs text-slate-400 flex items-center gap-1">
