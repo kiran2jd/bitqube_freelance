@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Globe, Layers, User as UserIcon, LogOut, LayoutDashboard, ChevronDown, FileText } from "lucide-react";
+import { Globe, Layers, User as UserIcon, LogOut, LayoutDashboard, ChevronDown, FileText, ShieldAlert } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 interface NavbarProps {
@@ -33,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const isProfessional = user?.roles.includes("professional");
   const isCustomer = user?.roles.includes("customer");
+  const isAdmin = user?.roles.includes("administrator");
   const dashboardRoute = isProfessional ? "/dashboard/professional" : "/dashboard/customer";
 
   return (
@@ -146,6 +147,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                       >
                         <UserIcon className="w-4 h-4 text-indigo-400" />
                         Edit Profile
+                      </Link>
+                    )}
+
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-xs font-semibold hover:bg-slate-800 text-rose-400 hover:text-rose-300 transition-colors"
+                      >
+                        <ShieldAlert className="w-4 h-4 text-rose-400" />
+                        Admin Command Center
                       </Link>
                     )}
 

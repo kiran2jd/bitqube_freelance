@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
+    admin,
     auth,
     categories,
     config,
     contracts,
+    disputes,
     health,
     payments,
     professionals,
@@ -29,3 +31,5 @@ api_router.include_router(proposals.router, prefix="/proposals", tags=["Proposal
 api_router.include_router(contracts.router, prefix="/contracts", tags=["Contracts"])
 api_router.include_router(reviews.router, prefix="/reviews", tags=["Reviews"])
 api_router.include_router(payments.router, prefix="/payments", tags=["Payments & Ledger"])
+api_router.include_router(admin.router, prefix="/admin", tags=["Admin & Governance"])
+api_router.include_router(disputes.router, prefix="/disputes", tags=["Disputes"])

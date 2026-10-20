@@ -248,3 +248,62 @@ export interface Invoice {
   status: string;
   date: string;
 }
+
+export interface PlatformMetrics {
+  total_users: number;
+  total_clients: number;
+  total_professionals: number;
+  total_contracts: number;
+  total_gmv: number;
+  platform_commission_revenue: number;
+  pending_verifications: number;
+  open_disputes: number;
+}
+
+export interface PendingCredential {
+  id: string;
+  professional_id: string;
+  user_id: string;
+  professional_name: string;
+  professional_email: string;
+  title: string;
+  issuing_organization: string;
+  credential_identifier?: string | null;
+  document_id?: string | null;
+  verification_status: "pending" | "verified" | "rejected";
+  created_at: string;
+}
+
+export interface Dispute {
+  id: string;
+  contract_id: string;
+  milestone_id?: string | null;
+  raised_by_id: string;
+  raised_by_name?: string | null;
+  reason: string;
+  description: string;
+  status: "opened" | "under_investigation" | "resolved_refund" | "resolved_release" | "dismissed";
+  resolution_notes?: string | null;
+  resolved_by?: string | null;
+  resolved_at?: string | null;
+  created_at: string;
+}
+
+export interface FeatureFlag {
+  key: string;
+  value: boolean;
+  description?: string | null;
+  updated_at: string;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  actor_id?: string | null;
+  actor_email?: string | null;
+  action: string;
+  entity_type: string;
+  entity_id?: string | null;
+  ip_address?: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}

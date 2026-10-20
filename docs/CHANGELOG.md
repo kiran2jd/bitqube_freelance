@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0-admin] - 2026-10-21
+
+### Added
+- **Milestone 6 (Admin & Operational Governance) Completed**:
+  - **Administrative Telemetry & Metrics (`app/api/v1/endpoints/admin.py`)**:
+    - `GET /api/v1/admin/metrics`: Real-time computation of total users, clients, professionals, contracts, GMV (INR ₹), platform 10% fee commission revenue, pending credential reviews, and open disputes.
+  - **Credential Verification Review Queue**:
+    - `GET /api/v1/admin/credentials/pending`: Administrative queue of submitted professional certificates.
+    - `POST /api/v1/admin/credentials/{id}/review`: Approve or reject credentials with mandatory reason recording. Automatic promotion of professional profile status to `verified`.
+  - **Dispute Management & General Ledger Reallocation (`app/api/v1/endpoints/disputes.py` & `admin.py`)**:
+    - `POST /api/v1/disputes`: Contract counterparties can lodge formal disputes freezing milestone escrow funds.
+    - `GET /api/v1/admin/disputes`: Administrative dispute investigation queue.
+    - `POST /api/v1/admin/disputes/{id}/resolve`: Adjudicates disputes (`refund_customer`, `release_to_professional`, `dismiss`) with automated double-entry ledger rebalancing.
+  - **Runtime Feature Flags & Audit Logging**:
+    - `GET /api/v1/admin/feature-flags` & `PATCH /api/v1/admin/feature-flags/{key}`: Dynamic runtime toggles for roadmap feature flags.
+    - `GET /api/v1/admin/audit-logs`: Immutable audit trail tracking admin and security events with timestamps and client IP addresses.
+  - **Frontend Admin Command Center (`frontend/src/pages/AdminDashboardPage.tsx`)**:
+    - Responsive multi-tab dashboard covering Platform Overview, Credential Queue, Dispute Adjudication, Feature Flags, and Audit Trail.
+    - Integrated with `Navbar.tsx` user menu for administrator accounts.
+  - **Testing & Quality Assurance**:
+    - 21/21 backend Pytest tests passing in 8.69s.
+    - 0 Ruff linting errors.
+    - 3/3 frontend Vitest test suites passing.
+    - Production Vite build compiled cleanly in 5.60s (0 errors).
+
+---
+
 ## [1.4.0-payments] - 2026-10-21
 
 ### Added

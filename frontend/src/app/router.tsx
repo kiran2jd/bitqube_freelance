@@ -15,6 +15,7 @@ import { ProfessionalDetailPage } from "../pages/ProfessionalDetailPage";
 import { CustomerDashboardPage } from "../pages/CustomerDashboardPage";
 import { ProfessionalDashboardPage } from "../pages/ProfessionalDashboardPage";
 import { ProfessionalProfileEditPage } from "../pages/ProfessionalProfileEditPage";
+import { AdminDashboardPage } from "../pages/AdminDashboardPage";
 import { BrowseProjectsPage } from "../pages/BrowseProjectsPage";
 import { PostProjectPage } from "../pages/PostProjectPage";
 import { ProjectDetailPage } from "../pages/ProjectDetailPage";
@@ -95,6 +96,16 @@ export const AppRouter: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={["professional", "administrator"]}>
                   <ProfessionalProfileEditPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Administrator Operations Command Center */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["administrator"]}>
+                  <AdminDashboardPage />
                 </ProtectedRoute>
               }
             />

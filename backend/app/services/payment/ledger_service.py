@@ -17,7 +17,7 @@ class LedgerService:
     @staticmethod
     async def record_milestone_funded(
         db: AsyncSession,
-        payment_id: uuid.UUID,
+        payment_id: uuid.UUID | None,
         amount: Decimal,
         currency_code: str,
         description: str,
@@ -51,7 +51,7 @@ class LedgerService:
     @staticmethod
     async def record_milestone_released(
         db: AsyncSession,
-        payment_id: uuid.UUID,
+        payment_id: uuid.UUID | None,
         amount: Decimal,
         platform_fee: Decimal,
         currency_code: str,
@@ -97,7 +97,7 @@ class LedgerService:
     @staticmethod
     async def record_milestone_refund(
         db: AsyncSession,
-        payment_id: uuid.UUID,
+        payment_id: uuid.UUID | None,
         amount: Decimal,
         currency_code: str,
         description: str,

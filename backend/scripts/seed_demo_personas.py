@@ -149,6 +149,54 @@ async def seed_demo():
 
             print("[OK] Created Arjun's verified profile, Bar credential, and active legal service")
 
+        # 5b. Kavita Rao (Professional with PENDING credential for Admin review queue)
+        kavita = await db.scalar(
+            select(User)
+            .where(User.email == "kavita.ca@bitqube.org")
+            .options(selectinload(User.roles))
+        )
+        if not kavita:
+            kavita = User(
+                email="kavita.ca@bitqube.org",
+                password_hash=hash_password(DEFAULT_PASSWORD),
+                first_name="Kavita",
+                last_name="Rao",
+                country_code="IN",
+                preferred_currency="INR",
+                status="active",
+                email_verified_at=datetime.now(UTC),
+            )
+            db.add(kavita)
+            await db.flush()
+            db.add(UserRole(user_id=kavita.id, role="professional"))
+
+            kavita_profile = ProfessionalProfile(
+                user_id=kavita.id,
+                display_name="CA Kavita Rao",
+                title="Chartered Accountant & Corporate Tax Strategist",
+                biography="Specializing in corporate taxation, transfer pricing, and statutory audits for technology enterprises.",
+                country_code="IN",
+                hourly_rate=Decimal("4500.00"),
+                currency_code="INR",
+                skills=["Corporate Tax", "Statutory Audit", "Financial Advisory", "GST Advisory"],
+                professional_status="available",
+                verification_status="pending",
+                rating_average=Decimal("5.00"),
+                total_reviews_count=8,
+            )
+            db.add(kavita_profile)
+            await db.flush()
+
+            kavita_cred = ProfessionalCredential(
+                professional_id=kavita_profile.id,
+                title="Institute of Chartered Accountants of India (ICAI) Certificate of Practice",
+                issuing_organization="ICAI Southern India Regional Council",
+                credential_identifier="ICAI/COP/2018/54219",
+                verification_status="pending",
+            )
+            db.add(kavita_cred)
+            print("[OK] Created Kavita Rao with PENDING ICAI credential for Admin review queue")
+
         # 6. Sample Project posted by Priya
         project = await db.scalar(
             select(Project).where(
