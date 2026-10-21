@@ -65,6 +65,11 @@ async def create_payment_order(
     if milestone.status != "pending":
         raise BadRequestException(f"Milestone cannot be funded from status '{milestone.status}'")
 
+    if milestone.currency_code in ("BTQ", "QUBEX", "BTC", "ETH"):
+        raise BadRequestException(
+            "Cryptocurrency settlement is disabled on MVP. Platform transactions must use sovereign fiat (INR, USD, EUR, GBP)."
+        )
+
     # Compute platform fee percentage
     fee_pct = Decimal(str(settings.PLATFORM_FEE_PERCENTAGE))
     platform_fee = round((milestone.amount * fee_pct) / Decimal("100"), 2)
