@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { projectsApi } from "../api/marketplace";
 import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import { formatBudgetRange } from "../utils/currency";
 import {
   Search,
   Briefcase,
-  IndianRupee,
   Clock,
   ArrowRight,
   Loader2,
@@ -158,14 +158,24 @@ export const BrowseProjectsPage: React.FC = () => {
                 <div className="pt-4 border-t border-slate-800/80 space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <div>
-                      <span className="text-[10px] uppercase text-slate-500 block">Budget</span>
-                      <span className="text-sm font-bold text-white flex items-center">
-                        <IndianRupee className="w-3.5 h-3.5 text-indigo-400 mr-0.5" />
-                        {proj.budget_min
-                          ? `${Number(proj.budget_min).toLocaleString("en-IN")} - `
-                          : "Up to "}
-                        {Number(proj.budget_max).toLocaleString("en-IN")}
-                      </span>
+                      <span className="text-[10px] uppercase text-slate-500 block">Budget (USD)</span>
+                      {(() => {
+                        const { usdRange, inrRange } = formatBudgetRange(
+                          proj.budget_min,
+                          proj.budget_max,
+                          proj.currency_code
+                        );
+                        return (
+                          <>
+                            <span className="text-sm font-bold text-emerald-400">
+                              {usdRange}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block">
+                              ~ {inrRange} (INR)
+                            </span>
+                          </>
+                        );
+                      })()}
                     </div>
 
                     <div className="text-right">

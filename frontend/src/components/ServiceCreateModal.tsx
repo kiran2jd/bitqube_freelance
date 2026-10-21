@@ -17,14 +17,14 @@ export const ServiceCreateModal: React.FC<ServiceCreateModalProps> = ({
   onClose,
   categories,
   onSuccess,
-  defaultCurrency = "INR",
+  defaultCurrency = "USD",
   isVerified = false,
 }) => {
   const [categoryId, setCategoryId] = useState(categories[0]?.id || "");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priceType, setPriceType] = useState<"fixed" | "hourly">("fixed");
-  const [basePrice, setBasePrice] = useState<number>(5000);
+  const [basePrice, setBasePrice] = useState<number>(150);
   const [deliveryDays, setDeliveryDays] = useState<number>(3);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -163,16 +163,26 @@ export const ServiceCreateModal: React.FC<ServiceCreateModalProps> = ({
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Price ({defaultCurrency}) *
+                Price ({defaultCurrency === "USD" ? "$ USD" : defaultCurrency}) *
               </label>
-              <input
-                type="number"
-                min={100}
-                required
-                value={basePrice}
-                onChange={(e) => setBasePrice(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-2 text-slate-400 text-sm font-semibold">
+                  {defaultCurrency === "USD" ? "$" : "₹"}
+                </span>
+                <input
+                  type="number"
+                  min={5}
+                  required
+                  value={basePrice}
+                  onChange={(e) => setBasePrice(Number(e.target.value))}
+                  className="w-full pl-7 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              {defaultCurrency === "USD" && basePrice > 0 && (
+                <span className="text-[11px] text-amber-400 mt-1 block font-medium">
+                  ~ ₹{(basePrice * 84).toLocaleString("en-IN")} INR settlement
+                </span>
+              )}
             </div>
           </div>
 

@@ -26,6 +26,8 @@ class FeatureFlagsPublic(BaseModel):
 class PublicConfigResponse(BaseModel):
     default_country: str
     default_currency: str
+    display_currency: str = "USD"
+    usd_to_inr_exchange_rate: float = 84.0
     payment_provider: str
     platform_fee_percentage: float
     countries: list[CountryResponse]

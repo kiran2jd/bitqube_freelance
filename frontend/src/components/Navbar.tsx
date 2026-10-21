@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Globe, Layers, User as UserIcon, LogOut, LayoutDashboard, ChevronDown, FileText, ShieldAlert } from "lucide-react";
+import { Globe, User as UserIcon, LogOut, LayoutDashboard, ChevronDown, FileText, ShieldAlert } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 interface NavbarProps {
@@ -8,10 +8,7 @@ interface NavbarProps {
   defaultCountry?: string;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
-  defaultCurrency = "INR",
-  defaultCountry = "IN",
-}) => {
+export const Navbar: React.FC<NavbarProps> = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
@@ -42,15 +39,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-20">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200">
-              <Layers className="w-5 h-5 text-white" />
+            <div className="h-10 px-2.5 py-1 rounded-xl bg-white/95 flex items-center justify-center shadow-md shadow-indigo-500/20 group-hover:scale-105 group-hover:bg-white transition-all duration-200">
+              <img src="/bitqube-logo.png" alt="BitQube Logo" className="h-7 w-auto object-contain" />
             </div>
             <div>
-              <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
-                BitQube <span className="text-indigo-400 font-medium">Freelance</span>
+              <span className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
+                Freelance <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wider font-semibold">Global</span>
               </span>
               <span className="block text-[10px] tracking-wider text-slate-400 uppercase font-semibold">
-                Global Professional Marketplace
+                $ USD Rates • Razorpay Escrow
               </span>
             </div>
           </Link>
@@ -79,9 +76,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300">
               <Globe className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{user?.country_code || defaultCountry}</span>
+              <span>Global</span>
               <span className="text-slate-500">·</span>
-              <span className="font-semibold text-slate-100">₹ {user?.preferred_currency || defaultCurrency}</span>
+              <span className="font-semibold text-emerald-400">$ USD</span>
+              <span className="text-[10px] text-slate-400">(Settles in ₹ INR)</span>
             </div>
 
             {isAuthenticated && user ? (

@@ -208,6 +208,9 @@ export interface PaymentOrder {
   currency: string;
   key_id: string;
   milestone_title: string;
+  original_amount?: number;
+  original_currency?: string;
+  exchange_rate?: number;
 }
 
 export interface Payment {

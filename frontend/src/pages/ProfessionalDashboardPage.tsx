@@ -7,6 +7,7 @@ import { api } from "../api/client";
 import { ProfessionalProfile, Credential, ServiceItem, Category, Contract, Proposal } from "../types";
 import { CredentialModal } from "../components/CredentialModal";
 import { ServiceCreateModal } from "../components/ServiceCreateModal";
+import { formatAmount } from "../utils/currency";
 import {
   Award,
   CheckCircle2,
@@ -17,7 +18,7 @@ import {
   Star,
   ShieldCheck,
   AlertCircle,
-  IndianRupee,
+  DollarSign,
   Loader2,
   Tag,
   Package,
@@ -138,7 +139,7 @@ export const ProfessionalDashboardPage: React.FC = () => {
                   Rate:{" "}
                   <strong className="text-slate-200">
                     {profile?.hourly_rate
-                      ? `${profile.currency_code} ${profile.hourly_rate}/hr`
+                      ? `${formatAmount(profile.hourly_rate, profile.currency_code).display}/hr`
                       : "Not specified"}
                   </strong>
                 </span>
@@ -212,15 +213,24 @@ export const ProfessionalDashboardPage: React.FC = () => {
           <div className="p-6 bg-slate-900/80 border border-slate-800 rounded-2xl">
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">Total Earnings</span>
-              <IndianRupee className="w-4 h-4 text-emerald-400" />
+              <DollarSign className="w-4 h-4 text-emerald-400" />
             </div>
-            <div className="text-2xl font-bold text-white">
-              ₹{" "}
-              {myContracts
+            {(() => {
+              const totalEarnings = myContracts
                 .filter((c) => c.status === "completed")
-                .reduce((acc, c) => acc + Number(c.agreed_amount || 0), 0)
-                .toLocaleString("en-IN")}
-            </div>
+                .reduce((acc, c) => acc + Number(c.agreed_amount || 0), 0);
+              const fmt = formatAmount(totalEarnings, "USD");
+              return (
+                <>
+                  <div className="text-2xl font-bold text-white">{fmt.display}</div>
+                  {fmt.conversionNote && (
+                    <p className="text-[11px] text-amber-400 font-medium mt-0.5">
+                      ~ {fmt.conversionNote}
+                    </p>
+                  )}
+                </>
+              );
+            })()}
             <p className="text-xs text-slate-500 mt-1">Completed milestone payouts</p>
           </div>
 
@@ -380,8 +390,13 @@ export const ProfessionalDashboardPage: React.FC = () => {
                     <div>
                       <span className="text-[10px] text-slate-500 uppercase block">Starting at</span>
                       <span className="text-base font-bold text-white">
-                        ₹ {Number(service.base_price).toLocaleString("en-IN")}
+                        {formatAmount(service.base_price, service.currency_code || "USD").display}
                       </span>
+                      {formatAmount(service.base_price, service.currency_code || "USD").conversionNote && (
+                        <span className="text-[10px] text-amber-400 font-medium block">
+                          ~ {formatAmount(service.base_price, service.currency_code || "USD").conversionNote}
+                        </span>
+                      )}
                     </div>
                     <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
                       {service.status}
@@ -405,7 +420,7 @@ export const ProfessionalDashboardPage: React.FC = () => {
         onClose={() => setIsServiceModalOpen(false)}
         categories={categories}
         onSuccess={handleServiceAdded}
-        defaultCurrency={profile?.currency_code || "INR"}
+        defaultCurrency={profile?.currency_code || "USD"}
         isVerified={isVerified}
       />
     </div>

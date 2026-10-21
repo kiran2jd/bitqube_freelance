@@ -7,8 +7,8 @@ import { DeliverableSubmitModal } from "../components/DeliverableSubmitModal";
 import { ReviewModal } from "../components/ReviewModal";
 import { RazorpayCheckoutModal } from "../components/RazorpayCheckoutModal";
 import { InvoiceModal } from "../components/InvoiceModal";
+import { formatAmount } from "../utils/currency";
 import {
-  IndianRupee,
   Calendar,
   CheckCircle2,
   Clock,
@@ -171,11 +171,15 @@ export const ContractDetailPage: React.FC = () => {
               Agreed Contract Value
             </span>
             <div className="text-2xl font-extrabold text-white flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-indigo-400 mr-1" />
-              {Number(contract.agreed_amount).toLocaleString("en-IN")}
+              {formatAmount(contract.agreed_amount, contract.currency_code).display}
             </div>
+            {formatAmount(contract.agreed_amount, contract.currency_code).conversionNote && (
+              <p className="text-[11px] text-amber-400 font-medium">
+                ~ {formatAmount(contract.agreed_amount, contract.currency_code).conversionNote}
+              </p>
+            )}
             <p className="text-[11px] text-slate-400">
-              Payment Rail: <span className="text-slate-200 font-medium">{contract.currency_code} (Fiat)</span>
+              Payment Rail: <span className="text-slate-200 font-medium">{contract.currency_code} (Settles in INR)</span>
             </p>
 
             {contract.status === "completed" && (
@@ -278,10 +282,14 @@ export const ContractDetailPage: React.FC = () => {
                 <div className="shrink-0 flex flex-col items-end justify-between self-stretch">
                   <div className="text-right">
                     <span className="text-[10px] uppercase text-slate-500 block">Milestone Amount</span>
-                    <span className="text-lg font-bold text-white flex items-center">
-                      <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
-                      {Number(m.amount).toLocaleString("en-IN")}
+                    <span className="text-lg font-bold text-white block">
+                      {formatAmount(m.amount, m.currency_code || contract.currency_code).display}
                     </span>
+                    {formatAmount(m.amount, m.currency_code || contract.currency_code).conversionNote && (
+                      <span className="text-[10px] text-amber-400 font-medium block">
+                        ~ {formatAmount(m.amount, m.currency_code || contract.currency_code).conversionNote}
+                      </span>
+                    )}
                   </div>
 
                   {/* Actions depending on role and status */}

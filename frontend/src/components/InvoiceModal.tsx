@@ -8,7 +8,6 @@ import {
   AlertCircle,
   IndianRupee,
   CheckCircle2,
-  Layers,
 } from "lucide-react";
 
 interface InvoiceModalProps {
@@ -82,11 +81,11 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
             {/* Header */}
             <div className="flex items-start justify-between pb-6 border-b border-slate-800">
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-                    <Layers className="w-4 h-4" />
+                <div className="flex items-center gap-2.5">
+                  <div className="h-9 px-2 py-0.5 rounded-lg bg-white/95 flex items-center justify-center shadow-sm">
+                    <img src="/bitqube-logo.png" alt="BitQube Logo" className="h-6 w-auto object-contain" />
                   </div>
-                  <span className="font-bold text-lg text-white">BitQube Freelance</span>
+                  <span className="font-bold text-lg text-white">Freelance</span>
                 </div>
                 <p className="text-[11px] text-slate-400">Tax Invoice & Escrow Receipt</p>
                 <p className="text-[11px] text-slate-500 font-mono">GSTIN: 29AAAAA0000A1Z5</p>
@@ -145,10 +144,20 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
                     </td>
                   </tr>
                   <tr className="bg-slate-900/40 font-bold text-sm">
-                    <td className="px-4 py-3 text-white">Total Paid</td>
-                    <td className="px-4 py-3 text-right text-indigo-400 flex items-center justify-end">
-                      <IndianRupee className="w-3.5 h-3.5 mr-0.5" />
-                      {Number(invoice.amount).toLocaleString("en-IN")}
+                    <td className="px-4 py-3 text-white">
+                      Total Paid
+                      <span className="block text-[11px] text-slate-400 font-normal">
+                        Settled in INR via Razorpay (1 USD = ₹84.00)
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right text-indigo-400">
+                      <div className="flex items-center justify-end font-bold text-base">
+                        <IndianRupee className="w-3.5 h-3.5 mr-0.5" />
+                        {Number(invoice.amount).toLocaleString("en-IN")}
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-normal block">
+                        ~ ${(Number(invoice.amount) / 84).toFixed(2)} USD
+                      </span>
                     </td>
                   </tr>
                 </tbody>

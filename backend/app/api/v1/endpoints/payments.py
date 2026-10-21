@@ -70,9 +70,24 @@ async def create_payment_order(
             "Cryptocurrency settlement is disabled on MVP. Platform transactions must use sovereign fiat (INR, USD, EUR, GBP)."
         )
 
-    # Compute platform fee percentage
+    # Handle currency conversion: If milestone is USD, convert to INR for Razorpay processing
+    exchange_rate = Decimal(str(settings.USD_TO_INR_EXCHANGE_RATE))
+    if milestone.currency_code.upper() == "USD":
+        settlement_currency = "INR"
+        settlement_amount = round(milestone.amount * exchange_rate, 2)
+        original_amount = milestone.amount
+        original_currency = "USD"
+        rate_used = exchange_rate
+    else:
+        settlement_currency = milestone.currency_code
+        settlement_amount = milestone.amount
+        original_amount = None
+        original_currency = None
+        rate_used = None
+
+    # Compute platform fee percentage in settlement currency
     fee_pct = Decimal(str(settings.PLATFORM_FEE_PERCENTAGE))
-    platform_fee = round((milestone.amount * fee_pct) / Decimal("100"), 2)
+    platform_fee = round((settlement_amount * fee_pct) / Decimal("100"), 2)
 
     idempotency_key = f"pay_{milestone.id}_{uuid.uuid4().hex[:8]}"
 
@@ -85,9 +100,9 @@ async def create_payment_order(
         payee_id=payee_user_id,
         provider="razorpay",
         idempotency_key=idempotency_key,
-        amount=milestone.amount,
+        amount=settlement_amount,
         platform_fee=platform_fee,
-        currency_code=milestone.currency_code,
+        currency_code=settlement_currency,
         status="initiated",
     )
     db.add(payment)
@@ -96,13 +111,15 @@ async def create_payment_order(
     # Call Razorpay to create order
     order_data = await razorpay_gateway.create_order(
         payment_id=str(payment.id),
-        amount=milestone.amount,
-        currency=milestone.currency_code,
+        amount=settlement_amount,
+        currency=settlement_currency,
         receipt=f"rcpt_{payment.id.hex[:10]}",
         notes={
             "contract_id": str(contract.id),
             "milestone_id": str(milestone.id),
             "payment_id": str(payment.id),
+            "original_amount": str(original_amount) if original_amount else "",
+            "original_currency": str(original_currency) if original_currency else "",
         },
     )
 
@@ -114,10 +131,13 @@ async def create_payment_order(
         data=PaymentOrderResponse(
             payment_id=payment.id,
             order_id=order_data["id"],
-            amount=payment.amount,
-            currency=payment.currency_code,
+            amount=settlement_amount,
+            currency=settlement_currency,
             key_id=settings.RAZORPAY_KEY_ID,
             milestone_title=milestone.title,
+            original_amount=original_amount,
+            original_currency=original_currency,
+            exchange_rate=rate_used,
         )
     )
 

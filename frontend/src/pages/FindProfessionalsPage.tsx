@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { professionalsApi } from "../api/professionals";
+import { formatAmount } from "../utils/currency";
 import {
   Search,
   ShieldCheck,
@@ -177,8 +178,8 @@ export const FindProfessionalsPage: React.FC = () => {
                       <MapPin className="w-3 h-3 text-slate-500" />
                       {prof.country_code}
                       {prof.hourly_rate && (
-                        <span className="ml-1 text-slate-200 font-semibold">
-                          · {prof.currency_code} {prof.hourly_rate}/hr
+                        <span className="ml-1 text-emerald-400 font-semibold">
+                          · {formatAmount(prof.hourly_rate, prof.currency_code).usdFormatted}/hr
                         </span>
                       )}
                     </div>

@@ -3,7 +3,6 @@ import { paymentsApi } from "../api/payments";
 import { Payment, PaymentOrder } from "../types";
 import {
   X,
-  CreditCard,
   ShieldCheck,
   IndianRupee,
   Loader2,
@@ -91,12 +90,12 @@ export const RazorpayCheckoutModal: React.FC<RazorpayCheckoutModalProps> = ({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-            <CreditCard className="w-5 h-5" />
+          <div className="h-10 px-2.5 py-1 rounded-xl bg-white/95 flex items-center justify-center shadow-md">
+            <img src="/bitqube-logo.png" alt="BitQube Logo" className="h-6 w-auto object-contain" />
           </div>
           <div>
             <h3 className="text-lg font-bold text-white">Authorize Milestone Funding</h3>
-            <p className="text-xs text-slate-400">Razorpay Sovereign Fiat Escrow Gateway</p>
+            <p className="text-xs text-slate-400">Razorpay Sovereign Escrow • Multi-Currency Gateway</p>
           </div>
         </div>
 
@@ -123,34 +122,90 @@ export const RazorpayCheckoutModal: React.FC<RazorpayCheckoutModalProps> = ({
                 </span>
               </div>
 
-              {order && (
-                <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>Order Reference</span>
-                  <span className="font-mono text-slate-300 text-[11px]">{order.order_id}</span>
-                </div>
+              {order?.original_amount && order?.original_currency === "USD" ? (
+                <>
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>Contract Scope Amount</span>
+                    <span className="font-bold text-emerald-400 text-sm">
+                      ${Number(order.original_amount).toLocaleString("en-US")} USD
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>Exchange Rate</span>
+                    <span className="font-mono text-slate-300">
+                      1 USD = ₹{Number(order.exchange_rate || 84).toFixed(2)} INR
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-semibold text-slate-300 block">Charged in INR (₹)</span>
+                      <span className="text-[10px] text-slate-500">Razorpay Gateway Settlement</span>
+                    </div>
+                    <span className="text-xl font-extrabold text-white flex items-center">
+                      <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
+                      {Number(order.amount).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {currencyCode.toUpperCase() === "USD" ? (
+                    <>
+                      <div className="flex items-center justify-between text-xs text-slate-400">
+                        <span>Contract Amount</span>
+                        <span className="font-bold text-emerald-400 text-sm">
+                          ${Number(amount).toLocaleString("en-US")} USD
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-slate-400">
+                        <span>Exchange Rate</span>
+                        <span className="font-mono text-slate-300">1 USD = ₹84.00 INR</span>
+                      </div>
+                      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                        <div>
+                          <span className="text-xs font-semibold text-slate-300 block">Charged in INR (₹)</span>
+                          <span className="text-[10px] text-slate-500">Razorpay Gateway Settlement</span>
+                        </div>
+                        <span className="text-xl font-extrabold text-white flex items-center">
+                          <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
+                          {Number(order?.amount || amount * 84).toLocaleString("en-IN")}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-300">Total Due ({currencyCode})</span>
+                      <span className="text-xl font-extrabold text-white flex items-center">
+                        <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
+                        {Number(order?.amount || amount).toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
 
-              <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300">Total Due ({currencyCode})</span>
-                <span className="text-xl font-extrabold text-white flex items-center">
-                  <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
-                  {Number(amount).toLocaleString("en-IN")}
-                </span>
-              </div>
+              {order && (
+                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                  <span>Order Reference</span>
+                  <span className="font-mono text-slate-400">{order.order_id}</span>
+                </div>
+              )}
             </div>
 
             {/* Escrow Protection Notice */}
             <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 flex items-start gap-2.5">
               <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
               <p className="text-[11px] text-slate-300 leading-relaxed">
-                Funds are held securely by BitQube. Payouts to the consultant are only released once you review and approve the submitted deliverables.
+                Funds are held in secure escrow. Payouts to the consultant are only released once you review and approve the submitted deliverables.
               </p>
             </div>
 
             {/* Security Indicator */}
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
               <Lock className="w-3 h-3 text-emerald-400" />
-              <span>HMAC-SHA256 Encrypted & Authorized via Razorpay</span>
+              <span>Sovereign Fiat Gateway • Razorpay Authorized</span>
             </div>
 
             <div className="pt-2 flex items-center justify-end gap-3">
@@ -176,7 +231,7 @@ export const RazorpayCheckoutModal: React.FC<RazorpayCheckoutModalProps> = ({
                 ) : (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    Pay ₹{Number(amount).toLocaleString("en-IN")} (Razorpay)
+                    Pay ₹{Number(order?.amount || (currencyCode === "USD" ? amount * 84 : amount)).toLocaleString("en-IN")} INR
                   </>
                 )}
               </button>

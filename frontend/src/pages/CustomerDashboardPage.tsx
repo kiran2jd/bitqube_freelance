@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { authApi } from "../api/auth";
 import { projectsApi, contractsApi } from "../api/marketplace";
 import { Project, Contract } from "../types";
+import { formatAmount } from "../utils/currency";
 import {
   FolderPlus,
   Briefcase,
@@ -12,7 +13,7 @@ import {
   ShieldAlert,
   ArrowUpRight,
   Clock,
-  IndianRupee,
+  DollarSign,
   CheckCircle2,
   AlertCircle,
   KeyRound,
@@ -155,11 +156,16 @@ export const CustomerDashboardPage: React.FC = () => {
           <div className="p-6 bg-slate-900/80 border border-slate-800 rounded-2xl">
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">Total Contracted</span>
-              <IndianRupee className="w-4 h-4 text-indigo-400" />
+              <DollarSign className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="text-2xl font-bold text-white">
-              ₹ {totalAgreedAmount.toLocaleString("en-IN")}
+              {formatAmount(totalAgreedAmount, "USD").display}
             </div>
+            {formatAmount(totalAgreedAmount, "USD").conversionNote && (
+              <p className="text-[11px] text-amber-400 font-medium mt-0.5">
+                ~ {formatAmount(totalAgreedAmount, "USD").conversionNote}
+              </p>
+            )}
             <p className="text-xs text-slate-500 mt-1">Total committed value</p>
           </div>
         </div>

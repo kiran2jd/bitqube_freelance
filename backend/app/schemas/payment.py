@@ -16,6 +16,9 @@ class PaymentOrderResponse(BaseModel):
     currency: str
     key_id: str
     milestone_title: str
+    original_amount: Decimal | None = None
+    original_currency: str | None = None
+    exchange_rate: Decimal | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

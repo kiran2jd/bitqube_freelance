@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     # Defaults
     DEFAULT_COUNTRY: str = "IN"
     DEFAULT_CURRENCY: str = "INR"
+    DISPLAY_CURRENCY: str = "USD"
+    USD_TO_INR_EXCHANGE_RATE: float = 84.00
     PLATFORM_FEE_PERCENTAGE: float = 10.0
 
     # Razorpay (Primary Fiat Gateway)

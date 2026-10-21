@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { professionalsApi } from "../api/professionals";
 import { ProfessionalProfile, ServiceItem } from "../types";
+import { formatAmount } from "../utils/currency";
 import {
   ShieldCheck,
   Star,
@@ -113,8 +114,11 @@ export const ProfessionalDetailPage: React.FC = () => {
                 {profile.hourly_rate && (
                   <>
                     <span>·</span>
-                    <span className="text-slate-200 font-semibold">
-                      {profile.currency_code} {profile.hourly_rate} / hour
+                    <span className="text-emerald-400 font-semibold">
+                      {formatAmount(profile.hourly_rate, profile.currency_code).usdFormatted} / hour
+                    </span>
+                    <span className="text-slate-400 text-xs">
+                      (~ {formatAmount(profile.hourly_rate, profile.currency_code).inrFormatted} INR)
                     </span>
                   </>
                 )}

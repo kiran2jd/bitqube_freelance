@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Layers, ShieldCheck, CreditCard, Lock } from "lucide-react";
+import { ShieldCheck, CreditCard, Lock } from "lucide-react";
 
 export const Footer: React.FC = () => {
   return (
@@ -10,11 +10,11 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
-                <Layers className="w-5 h-5" />
+              <div className="h-9 px-2.5 py-1 rounded-xl bg-white/95 flex items-center justify-center shadow-md">
+                <img src="/bitqube-logo.png" alt="BitQube Logo" className="h-6 w-auto object-contain" />
               </div>
               <span className="text-xl font-bold tracking-tight text-white">
-                BitQube <span className="text-indigo-400 font-normal">Freelance</span>
+                Freelance <span className="text-indigo-400 font-normal">Global</span>
               </span>
             </Link>
             <p className="text-slate-400 text-xs leading-relaxed max-w-sm">

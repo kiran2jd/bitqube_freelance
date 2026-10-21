@@ -48,7 +48,7 @@ const SLIDES: SlideData[] = [
   },
   {
     id: 1,
-    categoryBadge: "Sovereign Fiat Escrow · Razorpay INR ₹",
+    categoryBadge: "Sovereign Fiat Escrow · USD Display with INR Settlement",
     badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
     title: "Zero Financial Risk with Milestone Escrow Vault",
     subtitle:
@@ -242,7 +242,7 @@ export const ShowcaseCarousel: React.FC = () => {
                     <span>4.95</span>
                     <span className="text-slate-500 font-normal">(24 reviews)</span>
                   </div>
-                  <span className="font-extrabold text-white">₹3,500 / hr</span>
+                  <span className="font-extrabold text-white">$45 / hr <span className="text-slate-400 font-normal">(~ ₹3,780)</span></span>
                 </div>
               </div>
             )}
@@ -262,21 +262,21 @@ export const ShowcaseCarousel: React.FC = () => {
                 <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
                   <span className="text-[10px] text-slate-500 uppercase font-semibold block">Milestone 1 Funded</span>
                   <div className="text-2xl font-black text-white flex items-center">
-                    ₹ 25,000.00
+                    $ 300.00 USD
                   </div>
-                  <div className="text-[11px] text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Razorpay Authorized & Held
+                  <div className="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Razorpay Authorized: ₹ 25,200.00 INR
                   </div>
                 </div>
 
                 <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between text-slate-400">
                     <span>Consultant Payout (90%)</span>
-                    <strong className="text-white">₹ 22,500.00</strong>
+                    <strong className="text-white">$ 270.00 (~ ₹22,680)</strong>
                   </div>
                   <div className="flex justify-between text-slate-400">
                     <span>BitQube Platform Fee (10%)</span>
-                    <strong className="text-slate-300">₹ 2,500.00</strong>
+                    <strong className="text-slate-300">$ 30.00 (~ ₹2,520)</strong>
                   </div>
                 </div>
 
@@ -336,15 +336,15 @@ export const ShowcaseCarousel: React.FC = () => {
                 <div className="space-y-1.5 text-xs text-slate-300">
                   <div className="flex justify-between">
                     <span>Taxable Value:</span>
-                    <span className="font-bold text-white">₹ 22,500.00</span>
+                    <span className="font-bold text-white">$ 270.00 USD <span className="text-slate-400 font-normal">(~ ₹ 22,680)</span></span>
                   </div>
                   <div className="flex justify-between">
                     <span>Platform Commission (10%):</span>
-                    <span className="font-bold text-slate-400">₹ 2,500.00</span>
+                    <span className="font-bold text-slate-400">$ 30.00 USD <span className="text-slate-500 font-normal">(~ ₹ 2,520)</span></span>
                   </div>
                   <div className="flex justify-between font-bold text-white pt-1 border-t border-slate-800">
-                    <span>Total Settled:</span>
-                    <span className="text-emerald-400">₹ 25,000.00</span>
+                    <span>Total Settled (Razorpay):</span>
+                    <span className="text-emerald-400">$ 300.00 USD <span className="text-slate-300 font-normal">(₹ 25,200.00)</span></span>
                   </div>
                 </div>
 

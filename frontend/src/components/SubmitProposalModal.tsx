@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { proposalsApi } from "../api/marketplace";
 import { Proposal } from "../types";
-import { X, Send, Loader2, AlertCircle, IndianRupee, Clock } from "lucide-react";
+import { X, Send, Loader2, AlertCircle, Clock } from "lucide-react";
 
 interface SubmitProposalModalProps {
   isOpen: boolean;
@@ -17,10 +17,10 @@ export const SubmitProposalModal: React.FC<SubmitProposalModalProps> = ({
   onClose,
   projectId,
   projectTitle,
-  defaultCurrency = "INR",
+  defaultCurrency = "USD",
   onSuccess,
 }) => {
-  const [amount, setAmount] = useState<number | string>(25000);
+  const [amount, setAmount] = useState<number | string>(500);
   const [durationDays, setDurationDays] = useState<number | string>(7);
   const [coverLetter, setCoverLetter] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,19 +88,22 @@ export const SubmitProposalModal: React.FC<SubmitProposalModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Your Bid Amount ({defaultCurrency}) *
+                Your Bid Amount ($ USD) *
               </label>
               <div className="relative">
-                <IndianRupee className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                <span className="absolute left-3.5 top-2 text-slate-400 font-bold text-sm">$</span>
                 <input
                   type="number"
                   required
-                  min={100}
+                  min={10}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full pl-8 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
+              <p className="text-[10px] text-slate-400 mt-1">
+                ~ ₹{(Number(amount || 0) * 84).toLocaleString("en-IN")} INR (Client settles in INR)
+              </p>
             </div>
 
             <div>

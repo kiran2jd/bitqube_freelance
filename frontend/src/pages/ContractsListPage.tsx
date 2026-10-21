@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { contractsApi } from "../api/marketplace";
 import { Contract } from "../types";
+import { formatAmount } from "../utils/currency";
 import {
   FileText,
-  IndianRupee,
   ArrowRight,
   CheckCircle2,
   Clock,
@@ -134,11 +134,23 @@ export const ContractsListPage: React.FC = () => {
 
                   <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-4">
                     <div>
-                      <span className="text-[10px] uppercase text-slate-500 block">Agreed Value</span>
-                      <span className="text-sm font-bold text-white flex items-center">
-                        <IndianRupee className="w-3.5 h-3.5 text-indigo-400 mr-0.5" />
-                        {Number(c.agreed_amount).toLocaleString("en-IN")}
-                      </span>
+                      <span className="text-[10px] uppercase text-slate-500 block">Agreed Value (USD)</span>
+                      {(() => {
+                        const { usdFormatted, inrFormatted } = formatAmount(
+                          c.agreed_amount,
+                          c.currency_code
+                        );
+                        return (
+                          <>
+                            <span className="text-sm font-bold text-emerald-400">
+                              {usdFormatted}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block">
+                              ~ {inrFormatted} (INR)
+                            </span>
+                          </>
+                        );
+                      })()}
                     </div>
 
                     <Link

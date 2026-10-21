@@ -3,13 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { projectsApi } from "../api/marketplace";
 import { api } from "../api/client";
-import { useAuth } from "../context/AuthContext";
 import {
   FolderPlus,
   ArrowLeft,
   Loader2,
   AlertCircle,
-  IndianRupee,
   Calendar,
   CheckCircle2,
   ShieldAlert,
@@ -17,13 +15,12 @@ import {
 
 export const PostProjectPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
   const [budgetMin, setBudgetMin] = useState<number | string>("");
-  const [budgetMax, setBudgetMax] = useState<number | string>(50000);
+  const [budgetMax, setBudgetMax] = useState<number | string>(500);
   const [deadlineDays, setDeadlineDays] = useState<number>(30);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +59,7 @@ export const PostProjectPage: React.FC = () => {
         description: description.trim(),
         budget_min: budgetMin !== "" ? Number(budgetMin) : undefined,
         budget_max: Number(budgetMax),
-        currency_code: user?.preferred_currency || "INR",
+        currency_code: "USD",
         deadline: calculatedDeadline,
       });
 
@@ -165,36 +162,39 @@ export const PostProjectPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Minimum Budget (₹ Optional)
+                  Minimum Budget ($ USD Optional)
                 </label>
                 <div className="relative">
-                  <IndianRupee className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">$</span>
                   <input
                     type="number"
                     min={0}
-                    placeholder="e.g. 20000"
+                    placeholder="e.g. 200"
                     value={budgetMin}
                     onChange={(e) => setBudgetMin(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-8 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Maximum Budget (₹ Required) *
+                  Maximum Budget ($ USD Required) *
                 </label>
                 <div className="relative">
-                  <IndianRupee className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">$</span>
                   <input
                     type="number"
                     required
-                    min={500}
+                    min={10}
                     value={budgetMax}
                     onChange={(e) => setBudgetMax(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-8 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+                <p className="text-[10px] text-slate-400 mt-1.5">
+                  ~ ₹{(Number(budgetMax || 0) * 84).toLocaleString("en-IN")} INR (Milestones settle in INR via Razorpay)
+                </p>
               </div>
             </div>
 

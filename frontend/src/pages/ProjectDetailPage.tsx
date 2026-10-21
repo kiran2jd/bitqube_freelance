@@ -4,11 +4,11 @@ import { projectsApi, proposalsApi } from "../api/marketplace";
 import { Project, Proposal } from "../types";
 import { useAuth } from "../context/AuthContext";
 import { SubmitProposalModal } from "../components/SubmitProposalModal";
+import { formatAmount, formatBudgetRange } from "../utils/currency";
 import {
   ArrowLeft,
   Briefcase,
   Calendar,
-  IndianRupee,
   Users,
   ShieldCheck,
   Star,
@@ -153,19 +153,27 @@ export const ProjectDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl shrink-0 min-w-[220px] text-center space-y-3">
+          <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl shrink-0 min-w-[220px] text-center space-y-2">
             <span className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">
-              Allocated Budget
+              Allocated Budget (USD)
             </span>
-            <div className="text-2xl font-extrabold text-white flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-indigo-400 mr-1" />
-              {Number(project.budget_max).toLocaleString("en-IN")}
-            </div>
-            {project.budget_min && (
-              <p className="text-[11px] text-slate-400">
-                Min: ₹{Number(project.budget_min).toLocaleString("en-IN")}
-              </p>
-            )}
+            {(() => {
+              const { usdRange, inrRange } = formatBudgetRange(
+                project.budget_min,
+                project.budget_max,
+                project.currency_code
+              );
+              return (
+                <>
+                  <div className="text-xl font-extrabold text-emerald-400">
+                    {usdRange}
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    ~ {inrRange} (Settles in INR)
+                  </p>
+                </>
+              );
+            })()}
 
             {isProfessional && project.status === "open" && (
               <button
@@ -271,11 +279,23 @@ export const ProjectDetailPage: React.FC = () => {
 
                     <div className="shrink-0 flex flex-col items-end justify-between self-stretch">
                       <div className="text-right">
-                        <span className="text-[10px] uppercase text-slate-500 block">Bid Amount</span>
-                        <span className="text-xl font-extrabold text-white flex items-center">
-                          <IndianRupee className="w-4 h-4 text-indigo-400 mr-0.5" />
-                          {Number(prop.amount).toLocaleString("en-IN")}
-                        </span>
+                        <span className="text-[10px] uppercase text-slate-500 block">Bid Amount (USD)</span>
+                        {(() => {
+                          const { usdFormatted, inrFormatted } = formatAmount(
+                            prop.amount,
+                            prop.currency_code
+                          );
+                          return (
+                            <>
+                              <span className="text-xl font-extrabold text-emerald-400">
+                                {usdFormatted}
+                              </span>
+                              <span className="text-[10px] text-slate-400 block">
+                                ~ {inrFormatted} (INR)
+                              </span>
+                            </>
+                          );
+                        })()}
                       </div>
 
                       {project.status === "open" && prop.status === "submitted" && (

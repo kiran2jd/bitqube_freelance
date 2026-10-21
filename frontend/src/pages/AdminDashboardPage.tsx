@@ -7,6 +7,7 @@ import {
   PendingCredential,
   PlatformMetrics,
 } from "../types";
+import { formatAmount } from "../utils/currency";
 import {
   ShieldAlert,
   Users,
@@ -18,7 +19,7 @@ import {
   Sliders,
   CheckCircle2,
   XCircle,
-  IndianRupee,
+  DollarSign,
   Loader2,
   AlertCircle,
   RotateCw,
@@ -308,12 +309,16 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-2">
                 <div className="flex items-center justify-between text-slate-400">
                   <span className="text-xs font-semibold uppercase">Gross Volume (GMV)</span>
-                  <IndianRupee className="w-4 h-4 text-emerald-400" />
+                  <DollarSign className="w-4 h-4 text-emerald-400" />
                 </div>
-                <div className="text-3xl font-extrabold text-white flex items-center">
-                  <IndianRupee className="w-6 h-6 text-emerald-400 mr-1" />
-                  {Number(metrics.total_gmv).toLocaleString("en-IN")}
+                <div className="text-2xl font-extrabold text-white">
+                  {formatAmount(metrics.total_gmv, "USD").display}
                 </div>
+                {formatAmount(metrics.total_gmv, "USD").conversionNote && (
+                  <p className="text-[11px] text-amber-400 font-medium">
+                    ~ {formatAmount(metrics.total_gmv, "USD").conversionNote}
+                  </p>
+                )}
                 <div className="text-[11px] text-slate-500">Total contractual commitment</div>
               </div>
 
@@ -322,10 +327,14 @@ export const AdminDashboardPage: React.FC = () => {
                   <span className="text-xs font-semibold uppercase">Commission Revenue</span>
                   <TrendingUp className="w-4 h-4 text-emerald-400" />
                 </div>
-                <div className="text-3xl font-extrabold text-emerald-400 flex items-center">
-                  <IndianRupee className="w-6 h-6 mr-1" />
-                  {Number(metrics.platform_commission_revenue).toLocaleString("en-IN")}
+                <div className="text-2xl font-extrabold text-emerald-400">
+                  {formatAmount(metrics.platform_commission_revenue, "USD").display}
                 </div>
+                {formatAmount(metrics.platform_commission_revenue, "USD").conversionNote && (
+                  <p className="text-[11px] text-amber-400 font-medium">
+                    ~ {formatAmount(metrics.platform_commission_revenue, "USD").conversionNote}
+                  </p>
+                )}
                 <div className="text-[11px] text-slate-500">10% platform realized revenue</div>
               </div>
             </div>

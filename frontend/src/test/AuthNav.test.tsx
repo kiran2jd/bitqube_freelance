@@ -14,7 +14,8 @@ describe("Navbar Component", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/BitQube/i)).toBeInTheDocument();
+    expect(screen.getByAltText(/BitQube Logo/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/\$ USD/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/₹ INR/i)).toBeInTheDocument();
     expect(screen.getByText(/Find Professionals/i)).toBeInTheDocument();
     expect(screen.getByText(/Browse Services/i)).toBeInTheDocument();
