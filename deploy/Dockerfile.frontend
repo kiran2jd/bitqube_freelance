@@ -1,0 +1,33 @@
+# Multi-stage production build for BitQube Freelance Frontend (React 19 + Vite + Caddy)
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci --prefer-offline --no-audit
+
+# Copy source and build assets
+COPY frontend/ ./
+
+# Pass API build argument (defaults to same-origin /api/v1)
+ARG VITE_API_URL=/api/v1
+ENV VITE_API_URL=$VITE_API_URL
+
+RUN npm run build
+
+# Production Web Tier: Caddy Server
+FROM caddy:2.8-alpine AS runner
+
+# Copy built static artifacts
+COPY --from=builder /app/dist /var/www/html
+
+# Copy Caddy reverse proxy configuration
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80 443
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

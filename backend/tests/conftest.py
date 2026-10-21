@@ -11,6 +11,7 @@ from sqlalchemy.pool import NullPool
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.core.config import settings
+from app.core.rate_limit import limiter
 from app.db.base import Base
 from app.db.seed import seed_database
 from app.db.session import get_db, sync_engine
@@ -36,6 +37,9 @@ async def override_get_db():
 
 
 app.dependency_overrides[get_db] = override_get_db
+
+# Disable rate limiter for test suites to prevent false positive 429s
+limiter.enabled = False
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.config import settings
 from app.core.exceptions import ConflictException, ResourceNotFoundException, UnauthorizedException
+from app.core.rate_limit import limiter
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -61,6 +62,7 @@ def clear_auth_cookies(response: Response) -> None:
 
 
 @router.post("/register", response_model=ResponseModel[TokenResponse], status_code=status.HTTP_201_CREATED)
+@limiter.limit("20/minute")
 async def register(
     req: RegisterRequest,
     response: Response,
@@ -175,6 +177,7 @@ async def register(
 
 
 @router.post("/login", response_model=ResponseModel[TokenResponse])
+@limiter.limit("10/minute")
 async def login(
     req: LoginRequest,
     response: Response,

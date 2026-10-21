@@ -2,11 +2,14 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import RequestIdMiddleware, logger
+from app.core.rate_limit import limiter
+from app.core.security_headers import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
@@ -24,10 +27,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Rate limiter state
+app.state.limiter = limiter
+
 # Exception handlers
 register_exception_handlers(app)
 
 # Custom Middlewares
+app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestIdMiddleware)
 
 # CORS

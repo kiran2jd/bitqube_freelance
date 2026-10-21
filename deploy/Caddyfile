@@ -1,0 +1,48 @@
+{
+    email {$ACME_EMAIL:admin@bitqube.org}
+    admin off
+}
+
+{$DOMAIN:bitqube.org}, www.{$DOMAIN:bitqube.org}, localhost {
+    encode zstd gzip
+
+    # OWASP Recommended Security Headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com; frame-src https://api.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https: http://localhost:* https://api.razorpay.com https://lumberjack.razorpay.com;"
+        -Server
+    }
+
+    # Backend API Reverse Proxy with Forwarded IP tracking
+    handle /api/* {
+        reverse_proxy backend:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-Host {host}
+        }
+    }
+
+    # React SPA Client-Side Routing
+    handle {
+        root * /var/www/html
+        try_files {path} /index.html
+        file_server {
+            precompressed gzip zstd
+        }
+
+        # Cache control for immutable assets
+        @static path /assets/*
+        header @static Cache-Control "public, max-age=31536000, immutable"
+
+        # No cache for index.html SPA entrypoint
+        @html path /index.html
+        header @html Cache-Control "no-cache, no-store, must-revalidate"
+    }
+}

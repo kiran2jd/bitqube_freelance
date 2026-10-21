@@ -15,6 +15,7 @@ from app.core.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
+from app.core.rate_limit import limiter
 from app.models.contract import Contract
 from app.models.ledger import LedgerEntry
 from app.models.milestone import Milestone
@@ -36,7 +37,9 @@ router = APIRouter()
 
 
 @router.post("/orders", response_model=ApiResponse[PaymentOrderResponse], status_code=status.HTTP_201_CREATED)
+@limiter.limit("30/minute")
 async def create_payment_order(
+    request: Request,
     payload: CreatePaymentOrderRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),

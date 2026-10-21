@@ -67,3 +67,5 @@ Thumbs.db
 # Docker volumes & data
 postgres_data/
 minio_data/
+backups/
+uploads/

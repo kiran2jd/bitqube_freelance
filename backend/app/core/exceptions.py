@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
 
 from app.schemas.base import ErrorBody, ErrorDetail, ErrorEnvelope
 
@@ -71,6 +72,24 @@ class ForbiddenException(BitQubeException):
         )
 
 
+class SecurityViolationException(BitQubeException):
+    def __init__(self, message: str = "Security policy violation"):
+        super().__init__(
+            message=message,
+            code="SECURITY_VIOLATION",
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+
+class BusinessRuleViolationException(BitQubeException):
+    def __init__(self, message: str = "Business rule violation"):
+        super().__init__(
+            message=message,
+            code="BUSINESS_RULE_VIOLATION",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(BitQubeException)
     async def bitqube_exception_handler(request: Request, exc: BitQubeException):
@@ -105,5 +124,21 @@ def register_exception_handlers(app: FastAPI) -> None:
         )
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=envelope.model_dump(),
+        )
+
+    @app.exception_handler(RateLimitExceeded)
+    async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+        envelope = ErrorEnvelope(
+            success=False,
+            error=ErrorBody(
+                code="RATE_LIMIT_EXCEEDED",
+                message=f"Rate limit exceeded: {exc.detail}",
+                details=[],
+                request_id=getattr(request.state, "request_id", None),
+            ),
+        )
+        return JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content=envelope.model_dump(),
         )

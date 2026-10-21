@@ -7,6 +7,7 @@ from app.api.v1.endpoints import (
     config,
     contracts,
     disputes,
+    documents,
     health,
     payments,
     professionals,
@@ -33,3 +34,4 @@ api_router.include_router(reviews.router, prefix="/reviews", tags=["Reviews"])
 api_router.include_router(payments.router, prefix="/payments", tags=["Payments & Ledger"])
 api_router.include_router(admin.router, prefix="/admin", tags=["Admin & Governance"])
 api_router.include_router(disputes.router, prefix="/disputes", tags=["Disputes"])
+api_router.include_router(documents.router, prefix="/documents", tags=["Documents & Files"])
